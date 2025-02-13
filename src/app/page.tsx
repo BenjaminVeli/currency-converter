@@ -7,9 +7,9 @@ const Page = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [currencies] = useState(["Uno", "Dos", "Tres", "Cuatro"]);
+  const [currencies] = useState(["Uno", "Dos", "Tres", "Cuatro", "Cinco", "Seis", "Siete", "Ocho"]);
   const [selectedCurrency, setSelectedCurrency] = useState("");
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLDivElement>(null);
 
   // Implementamos el debounce
   useEffect(() => {
@@ -20,7 +20,6 @@ const Page = () => {
     return () => clearTimeout(timeoutId);
   }, [search]);
 
-  // Ahora useMemo solo se ejecuta cuando debouncedSearch cambia
   const filteredCurrencies = useMemo(() => {
     console.log("Filtrando monedas...");
     return currencies.filter(currency =>
@@ -30,10 +29,9 @@ const Page = () => {
 
   const toggleItems = () => setIsOpen(!isOpen);
 
-  // Maneja el clic fuera del input
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (inputRef.current && !inputRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (inputRef.current && !(inputRef.current as HTMLElement).contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
@@ -66,7 +64,7 @@ const Page = () => {
               />
             </div>
 
-            <div ref={inputRef} className="relative h-[88px] rounded-lg border border-solid border-gray-300 bg-white px-4 py-2 text-lg font-semibold text-greyblue-400 hover:bg-gray-150">
+            <div ref={inputRef} className="relative h-[88px] rounded-lg border border-solid border-gray-300 bg-white px-4 py-2 text-lg font-semibold hover:bg-gray-150">
               <label htmlFor="to" className="text-sm font-normal text-gray-400">
                 De
               </label>
@@ -100,14 +98,14 @@ const Page = () => {
                         setIsOpen(false);
                       }}
                     >
-                      {currency}
+                      <span className="text-slate-700">{currency}</span>{" "}<span className="text-gray-500">nombre</span>
                     </div>
                   ))}
                 </div>
               )}
             </div>
 
-            <div ref={inputRef} className="relative h-[88px] rounded-lg border border-solid border-gray-300 bg-white px-4 py-2 text-lg font-semibold text-greyblue-400 hover:bg-gray-150">
+            <div ref={inputRef} className="relative h-[88px] rounded-lg border border-solid border-gray-300 bg-white px-4 py-2 text-lg font-semibold hover:bg-gray-150">
               <label htmlFor="to" className="text-sm font-normal text-gray-400">
                 A
               </label>
@@ -141,7 +139,7 @@ const Page = () => {
                         setIsOpen(false);
                       }}
                     >
-                      {currency}
+                      <span className="text-slate-700">{currency}</span>{" "}<span className="text-gray-500">nombre</span>
                     </div>
                   ))}
                 </div>

@@ -203,3 +203,6 @@ export const coins = [
     { id: 186, code: "ZWL", name: "Dólar zimbabuense" },
 ]
 
+
+// URL DE IMAGENES
+// `https://www.xe.com/svgs/flags/${code}.static.svg` code de mayúscula a minuscula
