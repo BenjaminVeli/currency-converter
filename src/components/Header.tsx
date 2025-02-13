@@ -4,7 +4,7 @@ import { SiGithub } from "react-icons/si";
 
 const Header = () => {
   return (
-    <header className="bg-customBlue">
+    <header className="fixed top-0 left-0 w-full bg-customBlue">
       <div className="container">
         <div className="flex justify-between lg:relative items-center h-16 lg:h-18">
           <Link href="/">

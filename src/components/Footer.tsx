@@ -3,7 +3,7 @@ import { socialMedias } from "@/constants/data";
 
 const Footer = () => {
   return (
-    <footer className="bg-customBlue py-5">
+    <footer className="bg-customBlue py-5 absolute bottom-0 w-full">
       <div className="container">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
           <h3 className="cursor-pointer text-white text-sm font-medium uppercase">CurrencyFlow</h3>
