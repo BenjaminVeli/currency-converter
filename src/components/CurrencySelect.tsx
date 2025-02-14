@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { IoChevronDownOutline, IoCloseSharp } from "react-icons/io5";
-import { CurrencySelectProps } from "@/types";
+import { CurrencySelectProps, EnhancedCurrency } from "@/types";
 import Image from "next/image";
 import { IoFlag } from "react-icons/io5";
 
@@ -8,6 +8,7 @@ const CurrencySelect = ({ label, onChange, currencies, isLoading }: CurrencySele
     const [isOpen, setIsOpen] = useState(false);
     const [search, setSearch] = useState("");
     const [isSelected, setIsSelected] = useState(false);
+    const [selectedCurrency, setSelectedCurrency] = useState<EnhancedCurrency | null>(null);
     const [debouncedSearch, setDebouncedSearch] = useState("");
     const [imageError, setImageError] = useState<Record<string, boolean>>({});
     const inputRef = useRef<HTMLDivElement>(null);
@@ -32,7 +33,8 @@ const CurrencySelect = ({ label, onChange, currencies, isLoading }: CurrencySele
 
     const filteredCurrencies = useMemo(() => {
         return currencies.filter(currency =>
-            currency.code.toLowerCase().includes(debouncedSearch.toLowerCase())
+            currency.code.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+            currency.name.toLowerCase().includes(debouncedSearch.toLowerCase())
         );
     }, [debouncedSearch, currencies]);
 
@@ -42,30 +44,31 @@ const CurrencySelect = ({ label, onChange, currencies, isLoading }: CurrencySele
                 {label}
             </label>
             <div className="flex items-center gap-2">
-                {!isSelected || imageError[search] ? (
+                {!isSelected || imageError[selectedCurrency?.code || ''] ? (
                     <IoFlag className="text-gray-500" size={24} />
                 ) : (
                     <Image
-                        src={`https://www.xe.com/svgs/flags/${search.toLowerCase()}.static.svg`}
-                        alt={`${search} flag`}
+                        src={`https://www.xe.com/svgs/flags/${selectedCurrency?.code.toLowerCase()}.static.svg`}
+                        alt={`${selectedCurrency?.code} flag`}
                         width={24}
                         height={16}
                         loader={({ src }) => src}
-                        onError={() => setImageError(prev => ({ ...prev, [search]: true }))}
+                        onError={() => setImageError(prev => ({ ...prev, [selectedCurrency?.code || '']: true }))}
                     />
                 )}
                 <input
                     type="text"
-                    value={search}
+                    value={selectedCurrency ? `${selectedCurrency.code} - ${selectedCurrency.name}` : search}
                     onChange={(e) => {
                         setSearch(e.target.value);
+                        setSelectedCurrency(null);
                         setIsSelected(false);
                     }}
                     onKeyDown={(e) => {
                         if (e.key === "Enter" && filteredCurrencies.length > 0) {
                             const firstCurrency = filteredCurrencies[0];
                             onChange(firstCurrency.code);
-                            setSearch(firstCurrency.code);
+                            setSelectedCurrency(firstCurrency);
                             setIsSelected(true);
                             setIsOpen(false);
                         }
@@ -94,7 +97,7 @@ const CurrencySelect = ({ label, onChange, currencies, isLoading }: CurrencySele
                                 className="px-4 py-2 hover:bg-sky-400 cursor-pointer flex gap-x-4"
                                 onClick={() => {
                                     onChange(currency.code);
-                                    setSearch(currency.code);
+                                    setSelectedCurrency(currency);
                                     setIsSelected(true);
                                     setIsOpen(false);
                                 }}
@@ -111,7 +114,10 @@ const CurrencySelect = ({ label, onChange, currencies, isLoading }: CurrencySele
                                         onError={() => setImageError(prev => ({ ...prev, [currency.code]: true }))}
                                     />
                                 )}
-                                <span className="text-slate-700">{currency.code} {currency.name}</span>
+                                <div className="flex flex-col">
+                                    <span className="text-slate-700 font-medium">{currency.code}</span>
+                                    <span className="text-slate-500 text-sm">{currency.name}</span>
+                                </div>
                             </div>
                         ))
                     ) : (

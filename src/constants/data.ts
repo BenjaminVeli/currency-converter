@@ -156,7 +156,7 @@ export const coins = [
     { id: 139, code: "SHP", name: "Libra de Santa Elena" },
     { id: 140, code: "SLE", name: "León de Sierra Leona" },
     { id: 141, code: "SLL", name: "León de Sierra Leona (nuevo)" },
-    { id: 142, code: "SOL", name: "Sol peruano" },
+    { id: 142, code: "SOL", name: "Solana" },
     { id: 143, code: "SOS", name: "Chelín somalí" },
     { id: 144, code: "SRD", name: "Dólar surinamés" },
     { id: 145, code: "STD", name: "Dólar de São Tomé y Príncipe" },
@@ -202,7 +202,3 @@ export const coins = [
     { id: 185, code: "ZWG", name: "Oro de Zimbabue" },
     { id: 186, code: "ZWL", name: "Dólar zimbabuense" },
 ]
-
-
-// URL DE IMAGENES
-// `https://www.xe.com/svgs/flags/${code}.static.svg` code de mayúscula a minuscula

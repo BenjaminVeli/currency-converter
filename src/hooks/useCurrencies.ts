@@ -1,9 +1,9 @@
 
 import { useState, useEffect } from 'react';
-import { Currency } from '@/types';
+import { EnhancedCurrency } from '@/types';
 
 export const useCurrencies = () => {
-    const [currencies, setCurrencies] = useState<Currency[]>([]);
+    const [currencies, setCurrencies] = useState<EnhancedCurrency[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -15,7 +15,8 @@ export const useCurrencies = () => {
                 if (data?.data) {
                     const currencyArray = Object.entries(data.data).map(([code, currency]) => ({
                         code,
-                        value: (currency as { value: number }).value,
+                        value: (currency as EnhancedCurrency).value,
+                        name: (currency as EnhancedCurrency).name,
                     }));
                     setCurrencies(currencyArray);
                 }
