@@ -9,11 +9,15 @@ export interface Currency {
     value: number;
 }
 
+export interface EnhancedCurrency extends Currency {
+    name: string;
+}
+
 export interface CurrencySelectProps {
     label: string;
     value: string;
     onChange: (value: string) => void;
-    currencies: Currency[];
+    currencies: EnhancedCurrency[];
     isLoading?: boolean;
 }
 

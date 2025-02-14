@@ -7,7 +7,9 @@ import { IoFlag } from "react-icons/io5";
 const CurrencySelect = ({ label, onChange, currencies, isLoading }: CurrencySelectProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [search, setSearch] = useState("");
+    const [isSelected, setIsSelected] = useState(false);
     const [debouncedSearch, setDebouncedSearch] = useState("");
+    const [imageError, setImageError] = useState<Record<string, boolean>>({});
     const inputRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -39,11 +41,35 @@ const CurrencySelect = ({ label, onChange, currencies, isLoading }: CurrencySele
             <label className="text-sm font-normal text-gray-400">
                 {label}
             </label>
-            <div className="flex items-center">
+            <div className="flex items-center gap-2">
+                {!isSelected || imageError[search] ? (
+                    <IoFlag className="text-gray-500" size={24} />
+                ) : (
+                    <Image
+                        src={`https://www.xe.com/svgs/flags/${search.toLowerCase()}.static.svg`}
+                        alt={`${search} flag`}
+                        width={24}
+                        height={16}
+                        loader={({ src }) => src}
+                        onError={() => setImageError(prev => ({ ...prev, [search]: true }))}
+                    />
+                )}
                 <input
                     type="text"
                     value={search}
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={(e) => {
+                        setSearch(e.target.value);
+                        setIsSelected(false);
+                    }}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter" && filteredCurrencies.length > 0) {
+                            const firstCurrency = filteredCurrencies[0];
+                            onChange(firstCurrency.code);
+                            setSearch(firstCurrency.code);
+                            setIsSelected(true);
+                            setIsOpen(false);
+                        }
+                    }}
                     className="outline-none w-full"
                     placeholder="Introduzca la moneda..."
                     onFocus={() => setIsOpen(true)}
@@ -69,17 +95,23 @@ const CurrencySelect = ({ label, onChange, currencies, isLoading }: CurrencySele
                                 onClick={() => {
                                     onChange(currency.code);
                                     setSearch(currency.code);
+                                    setIsSelected(true);
                                     setIsOpen(false);
                                 }}
                             >
-                                <Image
-                                    src={`https://www.xe.com/svgs/flags/${currency.code.toLowerCase()}.static.svg`}
-                                    alt={`${currency.code} flag`}
-                                    width={24}
-                                    height={16}
-                                    loader={({ src }) => src}
-                                />
-                                <span className="text-slate-700">{currency.code}</span>
+                                {imageError[currency.code] ? (
+                                    <IoFlag className="text-gray-500" size={24} />
+                                ) : (
+                                    <Image
+                                        src={`https://www.xe.com/svgs/flags/${currency.code.toLowerCase()}.static.svg`}
+                                        alt={`${currency.code} flag`}
+                                        width={24}
+                                        height={16}
+                                        loader={({ src }) => src}
+                                        onError={() => setImageError(prev => ({ ...prev, [currency.code]: true }))}
+                                    />
+                                )}
+                                <span className="text-slate-700">{currency.code} {currency.name}</span>
                             </div>
                         ))
                     ) : (

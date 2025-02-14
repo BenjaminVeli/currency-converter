@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { CurrencyData } from "@/types";
+import { CurrencyData, EnhancedCurrency } from "@/types";
+import { coins } from "@/constants/data";
 
 let cachedData: CurrencyData | null = null; // Caché en memoria
 
@@ -25,13 +26,26 @@ export async function GET() {
             throw new Error("Error en la API de currencyapi");
         }
 
-        const data: CurrencyData = await response.json();
+        const apiData: CurrencyData = await response.json();
+
+        // Crear un nuevo objeto con la información mejorada
+        const enhancedData: CurrencyData = {
+            data: Object.entries(apiData.data).reduce((acc, [key, value]) => {
+                const coinInfo = coins.find(coin => coin.code === key);
+                const enhancedCurrency: EnhancedCurrency = {
+                    code: value.code,
+                    value: value.value,
+                    name: coinInfo?.name || `${value.code} Currency` // Valor por defecto si no se encuentra el nombre
+                };
+                return { ...acc, [key]: enhancedCurrency };
+            }, {})
+        };
 
         // Guardar en caché los nuevos datos
-        cachedData = data;
+        cachedData = enhancedData;
 
         // Configurar la caché del servidor con "stale-while-revalidate"
-        const res = NextResponse.json(data);
+        const res = NextResponse.json(enhancedData);
         res.headers.set("Cache-Control", "s-maxage=86400, stale-while-revalidate");
         return res;
 

@@ -41,9 +41,9 @@ const Page = () => {
     <div className="bg-white w-full flex justify-center items-center min-h-screen">
       <div className="container">
         <h1 className="text-4xl md:text-6xl font-medium text-center tracking-tighter text-customBlueLight">
-          Convertidor de Moneda
+          Convertidor de Divisas
         </h1>
-        <p className="text-xl md:text-2xl text-gray-300 text-center my-3 md:my-6">
+        <p className="text-xl md:text-2xl text-gray-400 text-center my-3 md:my-6">
           Convertir {selectedCurrencyFrom || "-"} a {selectedCurrencyTo || "-"}
         </p>
 
