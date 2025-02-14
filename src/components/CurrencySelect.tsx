@@ -1,7 +1,8 @@
-// components/CurrencySelect.tsx
 import { useState, useEffect, useRef, useMemo } from "react";
 import { IoChevronDownOutline, IoCloseSharp } from "react-icons/io5";
 import { CurrencySelectProps } from "@/types";
+import Image from "next/image";
+import { IoFlag } from "react-icons/io5";
 
 const CurrencySelect = ({ label, onChange, currencies, isLoading }: CurrencySelectProps) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -64,13 +65,20 @@ const CurrencySelect = ({ label, onChange, currencies, isLoading }: CurrencySele
                         filteredCurrencies.map((currency) => (
                             <div
                                 key={currency.code}
-                                className="px-4 py-2 hover:bg-sky-400 cursor-pointer"
+                                className="px-4 py-2 hover:bg-sky-400 cursor-pointer flex gap-x-4"
                                 onClick={() => {
                                     onChange(currency.code);
                                     setSearch(currency.code);
                                     setIsOpen(false);
                                 }}
                             >
+                                <Image
+                                    src={`https://www.xe.com/svgs/flags/${currency.code.toLowerCase()}.static.svg`}
+                                    alt={`${currency.code} flag`}
+                                    width={24}
+                                    height={16}
+                                    loader={({ src }) => src}
+                                />
                                 <span className="text-slate-700">{currency.code}</span>
                             </div>
                         ))
