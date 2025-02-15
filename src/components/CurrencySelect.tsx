@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { IoChevronDownOutline, IoCloseSharp } from "react-icons/io5";
 import { CurrencySelectProps, EnhancedCurrency } from "@/types";
 import Image from "next/image";
-import { IoFlag } from "react-icons/io5";
+import { IoFlag, IoTrash } from "react-icons/io5";
 
 const CurrencySelect = ({ label, onChange, currencies, isLoading }: CurrencySelectProps) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -77,6 +77,16 @@ const CurrencySelect = ({ label, onChange, currencies, isLoading }: CurrencySele
                     placeholder="Introduzca la moneda..."
                     onFocus={() => setIsOpen(true)}
                 />
+                <button
+                    onClick={() => {
+                        setSearch("");
+                        setSelectedCurrency(null);
+                        setIsSelected(false);
+                    }}
+                    className="cursor-pointer"
+                >
+                    <IoTrash className="text-red-500" size={20} />
+                </button>
                 <button onClick={() => setIsOpen(!isOpen)} className="ml-2 cursor-pointer">
                     {isOpen ? (
                         <IoCloseSharp className="text-customBlueLight" size={20} />
